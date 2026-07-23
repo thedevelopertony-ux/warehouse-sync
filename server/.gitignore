@@ -1,0 +1,14 @@
+# Ignore dependencies
+node_modules/
+
+# Ignore environment variables
+.env
+
+# Ignore build folder
+dist/
+
+# Ignore uploaded files
+server/uploads/
+
+# Ignore logs
+*.loggit config --global user.email "thedevelopertony@gmail.com"
