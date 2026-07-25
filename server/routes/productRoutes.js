@@ -6,6 +6,7 @@ const {
   getProducts,
   updateProduct,
   deleteProduct,
+  getProductStats,
 } = require("../controllers/productController");
 const { protect } = require("../middleware/authMiddleware");
 
@@ -14,5 +15,6 @@ router.get("/", protect, getProducts);
 router.post("/", protect, createProduct);
 router.delete("/:id", protect, deleteProduct);
 router.put("/:id", protect, updateProduct);
+router.get("/stats", protect, getProductStats);
 
 module.exports = router;

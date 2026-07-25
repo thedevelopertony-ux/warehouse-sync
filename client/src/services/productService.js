@@ -50,3 +50,13 @@ export const deleteProduct = async (id) => {
 
   return response.data;
 };
+
+export const getProductStats = async () => {
+  const response = await axios.get(`${API_URL}/stats`, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+
+  return response.data;
+};
