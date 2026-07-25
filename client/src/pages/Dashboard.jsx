@@ -110,8 +110,8 @@ const fetchStats = async () => {
       });
 
       setEditingId(null);
-
-      fetchProducts();
+      await fetchProducts();
+      await fetchStats();
     } catch (error) {
       alert(error.response?.data?.message || "Something went wrong");
     }
@@ -129,8 +129,8 @@ const fetchStats = async () => {
       await deleteProduct(id);
 
       alert("Product Deleted Successfully!");
-
-      fetchProducts();
+      await fetchProducts();
+      await fetchStats();
     } catch (error) {
       alert(error.response?.data?.message || "Delete Failed");
     }
