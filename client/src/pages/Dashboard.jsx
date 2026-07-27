@@ -160,6 +160,33 @@ const handleExport = async () => {
   }
 };
 
+// Drag & Drop Upload
+const handleDrop = async (e) => {
+  e.preventDefault();
+
+  const file = e.dataTransfer.files[0];
+
+  if (!file) return;
+
+  try {
+    const result = await uploadInventory(file);
+
+    alert(
+      `Imported: ${result.imported}\nUpdated: ${result.updated}`
+    );
+
+    await fetchProducts();
+    await fetchStats();
+  } catch (error) {
+    console.error(error);
+    alert(error.response?.data?.message || "Upload Failed");
+  }
+};
+
+const handleDragOver = (e) => {
+  e.preventDefault();
+};
+
 // Upload Inventory
 const handleFileUpload = async (e) => {
   const file = e.target.files[0];
@@ -191,18 +218,43 @@ const handleFileUpload = async (e) => {
     <h1>WarehouseSync Dashboard</h1>
 
   <div style={{ marginBottom: "20px" }}>
-    <button onClick={handleExport}>
-      Export Inventory
-    </button>
+  <button onClick={handleExport}>
+    Export Inventory
+  </button>
+
+  <div
+    onDrop={handleDrop}
+    onDragOver={handleDragOver}
+    style={{
+      margin: "30px auto",
+      width: "700px",
+      maxWidth: "90%",
+      height: "220px",
+      border: "3px dashed #4CAF50",
+      borderRadius: "15px",
+      backgroundColor: "#1f2937",
+      color: "#ffffff",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      cursor: "pointer",
+}}
+  >
+    <h3>📂 Warehouse File Upload</h3>
+
+    <p>Drag & Drop Excel/CSV File Here</p>
+
+    <p>OR</p>
 
     <input
-    type="file"
-    accept=".xlsx,.xls,.csv"
-    onChange={handleFileUpload}
-    style={{ marginLeft: "20px" }}
+      type="file"
+      accept=".xlsx,.xls,.csv"
+      onChange={handleFileUpload}
     />
   </div>
-
+</div>
     <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
   <div>
     <h3>Total Products</h3>
