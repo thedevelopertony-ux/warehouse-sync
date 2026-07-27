@@ -5,7 +5,7 @@ const Product = require("../models/Product");
 // ===============================
 const createProduct = async (req, res) => {
   try {
-    const {
+    let {
       name,
       sku,
       category,
@@ -15,7 +15,33 @@ const createProduct = async (req, res) => {
       location,
     } = req.body;
 
-    // Check if SKU already exists
+    // Validation
+    if (!name || !sku || !category) {
+      return res.status(400).json({
+        message: "Name, SKU and Category are required",
+      });
+    }
+
+    if (quantity == null || quantity < 0) {
+      return res.status(400).json({
+        message: "Quantity cannot be negative",
+      });
+    }
+
+    if (price == null || price < 0) {
+      return res.status(400).json({
+        message: "Price cannot be negative",
+      });
+    }
+
+    // Clean data
+    name = name.trim();
+    sku = sku.trim().toUpperCase();
+    category = category.trim();
+    supplier = supplier ? supplier.trim() : "";
+    location = location ? location.trim() : "";
+
+    // Check duplicate SKU
     const existingProduct = await Product.findOne({ sku });
 
     if (existingProduct) {
@@ -24,7 +50,6 @@ const createProduct = async (req, res) => {
       });
     }
 
-    // Create Product
     const product = await Product.create({
       name,
       sku,
@@ -86,7 +111,6 @@ const updateProduct = async (req, res) => {
       req.body,
       {
         new: true,
-        runValidators: true,
       }
     );
 
@@ -131,7 +155,7 @@ const deleteProduct = async (req, res) => {
 };
 
 // ===============================
-// Get Product Statistics
+// Product Statistics
 // ===============================
 const getProductStats = async (req, res) => {
   try {
@@ -171,13 +195,10 @@ const getProductStats = async (req, res) => {
   }
 };
 
-// ===============================
-// Exports
-// ===============================
 module.exports = {
   createProduct,
   getProducts,
-  updateProduct,
-  deleteProduct,
-  getProductStats,
+ updateProduct,
+ deleteProduct,
+ getProductStats,
 };

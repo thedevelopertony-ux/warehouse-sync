@@ -1,0 +1,16 @@
+const express = require("express");
+const router = express.Router();
+
+const upload = require("../middleware/uploadMiddleware");
+const { protect } = require("../middleware/authMiddleware");
+const { uploadInventory } = require("../controllers/uploadController");
+
+// Upload Excel/CSV
+router.post(
+  "/",
+  protect,
+  upload.single("file"),
+  uploadInventory
+);
+
+module.exports = router;

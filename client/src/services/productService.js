@@ -60,3 +60,36 @@ export const getProductStats = async () => {
 
   return response.data;
 };
+
+export const exportInventory = async () => {
+  const response = await axios.get(
+    "http://localhost:5000/api/export",
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+      responseType: "blob",
+    }
+  );
+
+  return response.data;
+};
+
+export const uploadInventory = async (file) => {
+  const formData = new FormData();
+
+  formData.append("file", file);
+
+  const response = await axios.post(
+    "http://localhost:5000/api/upload",
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return response.data;
+};

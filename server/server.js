@@ -4,6 +4,8 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
+const exportRoutes = require("./routes/exportRoutes");
 
 dotenv.config();
 connectDB();
@@ -16,6 +18,8 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/export", exportRoutes);
 
 // Test Route
 app.get("/", (req, res) => {

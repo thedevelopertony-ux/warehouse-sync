@@ -2,50 +2,16 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
+    name: String,
     sku: {
       type: String,
-      required: true,
       unique: true,
-      uppercase: true,
-      trim: true,
     },
-
-    category: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    quantity: {
-      type: Number,
-      required: true,
-      default: 0,
-      min: 0,
-    },
-
-    price: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-
-    supplier: {
-      type: String,
-      trim: true,
-      default: "",
-    },
-
-    location: {
-      type: String,
-      trim: true,
-      default: "",
-    },
+    category: String,
+    quantity: Number,
+    price: Number,
+    supplier: String,
+    location: String,
   },
   {
     timestamps: true,

@@ -5,6 +5,8 @@ import {
   updateProduct,
   deleteProduct,
   getProductStats,
+  exportInventory,
+  uploadInventory,
 } from "../services/productService";
 
 function Dashboard() {
@@ -135,12 +137,73 @@ const fetchStats = async () => {
       alert(error.response?.data?.message || "Delete Failed");
     }
   };
+  // Export Inventory
+const handleExport = async () => {
+  try {
+    const data = await exportInventory();
+
+    const url = window.URL.createObjectURL(new Blob([data]));
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.setAttribute("download", "inventory.xlsx");
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+  } catch (error) {
+    console.error(error);
+    alert("Export Failed");
+  }
+};
+
+// Upload Inventory
+const handleFileUpload = async (e) => {
+  const file = e.target.files[0];
+
+  if (!file) return;
+
+  try {
+    const result = await uploadInventory(file);
+
+    alert(
+      `Imported: ${result.imported}\nUpdated: ${result.updated}`
+    );
+
+    await fetchProducts();
+    await fetchStats();
+
+    // Clear the selected file
+    e.target.value = "";
+  } catch (error) {
+    console.error(error);
+
+    alert(error.response?.data?.message || "Upload Failed");
+  }
+};
+
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>WarehouseSync Dashboard</h1>
+  <div style={{ padding: "20px" }}>
+    <h1>WarehouseSync Dashboard</h1>
 
-      <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
+  <div style={{ marginBottom: "20px" }}>
+    <button onClick={handleExport}>
+      Export Inventory
+    </button>
+
+    <input
+    type="file"
+    accept=".xlsx,.xls,.csv"
+    onChange={handleFileUpload}
+    style={{ marginLeft: "20px" }}
+    />
+  </div>
+
+    <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
   <div>
     <h3>Total Products</h3>
     <p>{stats.totalProducts}</p>
