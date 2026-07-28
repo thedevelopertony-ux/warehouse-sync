@@ -10,7 +10,9 @@ const uploadInventory = async (req, res) => {
     }
 
     // Read uploaded Excel file
-    const workbook = XLSX.readFile(req.file.path);
+      const workbook = XLSX.read(req.file.buffer, {
+     type: "buffer",
+    });
 
     // Get first sheet
     const sheetName = workbook.SheetNames[0];

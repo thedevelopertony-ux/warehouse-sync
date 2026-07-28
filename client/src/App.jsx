@@ -1,7 +1,7 @@
 import {
-BrowserRouter,
-Routes,
-Route
+    BrowserRouter,
+    Routes,
+    Route
 } from "react-router-dom";
 
 
@@ -10,35 +10,35 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 
 
-function App(){
+function App() {
 
 
-return(
+    return (
 
-<Routes>
-
-
-<Route 
-path="/"
-element={<Login/>}
-/>
+        <Routes>
 
 
-<Route
-path="/register"
-element={<Register/>}
-/>
+            <Route
+                path="/"
+                element={<Login />}
+            />
 
 
-<Route
-path="/dashboard"
-element={<Dashboard/>}
-/>
+            <Route
+                path="/register"
+                element={<Register />}
+            />
 
 
-</Routes>
+            <Route
+                path="/dashboard"
+                element={<Dashboard />}
+            />
 
-)
+
+        </Routes>
+
+    )
 
 }
 
