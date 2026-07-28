@@ -9,26 +9,43 @@ const uploadInventory = async (req, res) => {
       });
     }
 
+    // Read uploaded Excel file
     const workbook = XLSX.readFile(req.file.path);
 
+    // Get first sheet
     const sheetName = workbook.SheetNames[0];
 
     const worksheet = workbook.Sheets[sheetName];
 
+    // Convert sheet to JSON
     const data = XLSX.utils.sheet_to_json(worksheet);
 
     let imported = 0;
     let updated = 0;
 
+    // Loop through each row
     for (const row of data) {
-      const sku = row.SKU.trim().toUpperCase();
+      // Skip rows without SKU
+      if (!row.SKU) {
+        console.log("Skipped row because SKU is missing:", row);
+        continue;
+      }
 
+      const sku = String(row.SKU).trim().toUpperCase();
+
+      console.log("=================================");
+      console.log("Excel SKU:", sku);
+
+      // Find existing product
       const existingProduct = await Product.findOne({ sku });
 
+      console.log("Existing Product:", existingProduct);
+
       if (existingProduct) {
+        // Update existing product
         existingProduct.name = row.Name;
         existingProduct.category = row.Category;
-        existingProduct.quantity = row.Quantity;
+        existingProduct.quantity += Number(row.Quantity);
         existingProduct.price = row.Price;
         existingProduct.supplier = row.Supplier;
         existingProduct.location = row.Location;
@@ -36,7 +53,10 @@ const uploadInventory = async (req, res) => {
         await existingProduct.save();
 
         updated++;
+
+        console.log("Updated:", sku);
       } else {
+        // Create new product
         await Product.create({
           name: row.Name,
           sku,
@@ -48,6 +68,8 @@ const uploadInventory = async (req, res) => {
         });
 
         imported++;
+
+        console.log("Created:", sku);
       }
     }
 
@@ -57,12 +79,12 @@ const uploadInventory = async (req, res) => {
       updated,
       totalRows: data.length,
     });
-
   } catch (error) {
     console.error(error);
 
     res.status(500).json({
       message: "Server Error",
+      error: error.message,
     });
   }
 };
