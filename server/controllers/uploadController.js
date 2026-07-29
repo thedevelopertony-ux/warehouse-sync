@@ -27,8 +27,11 @@ const uploadInventory = async (req, res) => {
     console.log("Saved Mapping:", savedMapping);
 
 
-    // Read Excel file
-    const workbook = XLSX.readFile(req.file.path);
+    // Read uploaded Excel file
+    const workbook = XLSX.read(req.file.buffer || req.file.path, {
+      type: req.file.buffer ? "buffer" : "file",
+    });
+
 
     const sheetName = workbook.SheetNames[0];
 
@@ -44,8 +47,6 @@ const uploadInventory = async (req, res) => {
     // Process every row
     for (const row of data) {
 
-
-      // Convert Excel columns into warehouse fields
       const mappedRow = {};
 
       for (const excelColumn in savedMapping) {
@@ -82,17 +83,14 @@ const uploadInventory = async (req, res) => {
 
       if (existingProduct) {
 
-
         console.log("Updating:", sku);
 
 
-        // ADD quantity instead of replacing
         existingProduct.quantity += Number(
           mappedRow.Quantity || 0
         );
 
 
-        // Update other details only if provided
         if (mappedRow.Name)
           existingProduct.name = mappedRow.Name;
 
@@ -113,18 +111,14 @@ const uploadInventory = async (req, res) => {
           existingProduct.location = mappedRow.Location;
 
 
-
         await existingProduct.save();
-
 
         updated++;
 
 
       } else {
 
-
         console.log("Creating:", sku);
-
 
 
         await Product.create({
@@ -157,7 +151,6 @@ const uploadInventory = async (req, res) => {
     }
 
 
-
     res.status(200).json({
 
       message: "Inventory imported successfully",
@@ -169,7 +162,6 @@ const uploadInventory = async (req, res) => {
       totalRows: data.length,
 
     });
-
 
 
   } catch (error) {
