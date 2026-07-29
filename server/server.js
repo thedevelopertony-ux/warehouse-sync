@@ -6,6 +6,7 @@ const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const exportRoutes = require("./routes/exportRoutes");
+const mappingRoutes = require("./routes/mappingRoutes");
 
 dotenv.config();
 connectDB();
@@ -20,6 +21,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/export", exportRoutes);
+app.use("/api/mappings", mappingRoutes);
 
 // Test Route
 app.get("/", (req, res) => {

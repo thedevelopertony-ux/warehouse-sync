@@ -8,6 +8,7 @@ Route
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import MappingPage from "./pages/MappingPage";
 
 
 function App(){
@@ -34,6 +35,8 @@ element={<Register/>}
 path="/dashboard"
 element={<Dashboard/>}
 />
+
+<Route path="/mapping" element={<MappingPage />} />
 
 
 </Routes>
